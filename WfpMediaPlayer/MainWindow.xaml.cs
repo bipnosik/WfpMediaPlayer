@@ -259,24 +259,10 @@ namespace WfpMediaPlayer.Views
 
         private void AddSongButton_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Медиа файлы (*.mp4)|*.mp4|Все файлы (*.*)|*.*";
-            if (openFileDialog.ShowDialog() == true)
+            AddTrackWindow addTrackWindow = new AddTrackWindow();
+            if (addTrackWindow.ShowDialog() == true)
             {
-                string filePath = openFileDialog.FileName;
-                string title = System.IO.Path.GetFileNameWithoutExtension(filePath);
-
-                WfpMediaPlayer.Models.Track newTrack = new WfpMediaPlayer.Models.Track
-                {
-                    Title = title,
-                    ArtistID = ArtistsComboBox.SelectedItem is Artist artist ? artist.ArtistID : 1,
-                    AlbumID = AlbumsComboBox.SelectedItem is Album album ? album.AlbumID : (int?)null,
-                    Duration = GetTrackDuration(filePath),
-                    Genre = "Unknown",
-                    FilePath = filePath,
-                    Format = "mp4"
-                };
-
+                WfpMediaPlayer.Models.Track newTrack = addTrackWindow.NewTrack; // Явно указано пространство имён
                 bool success = dbHelper.AddTrack(newTrack);
                 if (success)
                 {
