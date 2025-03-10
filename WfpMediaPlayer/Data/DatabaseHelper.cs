@@ -234,6 +234,7 @@ namespace WfpMediaPlayer.Data
 
 
 
+
         #region Artists
 
         public bool AddArtist(Artist artist)
@@ -829,6 +830,52 @@ namespace WfpMediaPlayer.Data
                 }
             }
             return artists;
+        }
+        public List<WfpMediaPlayer.Models.Track> SearchTracksByTitle(string searchQuery)
+        {
+            List<WfpMediaPlayer.Models.Track> tracks = new List<WfpMediaPlayer.Models.Track>();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = @"
+                SELECT t.TrackID, t.Title, t.ArtistID, t.AlbumID, t.Duration, t.Genre, t.FilePath, t.Format,
+                       a.Name AS ArtistName, al.Title AS AlbumTitle
+                FROM Tracks t
+                LEFT JOIN Artists a ON t.ArtistID = a.ArtistID
+                LEFT JOIN Albums al ON t.AlbumID = al.AlbumID
+                WHERE t.Title LIKE @SearchQuery";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@SearchQuery", $"%{searchQuery}%");
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                tracks.Add(new WfpMediaPlayer.Models.Track
+                                {
+                                    TrackID = (int)reader["TrackID"],
+                                    Title = reader["Title"].ToString(),
+                                    ArtistID = (int)reader["ArtistID"],
+                                    AlbumID = reader["AlbumID"] != DBNull.Value ? (int?)reader["AlbumID"] : null,
+                                    Duration = reader["Duration"] != DBNull.Value ? (TimeSpan?)TimeSpan.Parse(reader["Duration"].ToString()) : null,
+                                    Genre = reader["Genre"].ToString(),
+                                    FilePath = reader["FilePath"].ToString(),
+                                    Format = reader["Format"].ToString(),
+                                    ArtistName = reader["ArtistName"].ToString(),
+                                    AlbumTitle = reader["AlbumTitle"] != DBNull.Value ? reader["AlbumTitle"].ToString() : null
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка при поиске треков: " + ex.Message);
+            }
+            return tracks;
         }
         public List<Album> GetAlbums()
         {

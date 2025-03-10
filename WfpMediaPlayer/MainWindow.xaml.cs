@@ -77,6 +77,43 @@ namespace WfpMediaPlayer.Views
             AlbumsComboBox.ItemsSource = albums;
         }
 
+        // Новая функция поиска
+        private void SearchTracks(string searchQuery)
+        {
+            if (string.IsNullOrWhiteSpace(searchQuery))
+            {
+                // Если запрос пустой, загружаем все треки текущего плейлиста или все треки
+                if (PlaylistsComboBox.SelectedItem is Playlist selectedPlaylist)
+                {
+                    LoadTracksForPlaylist(selectedPlaylist.PlaylistID);
+                }
+                else
+                {
+                    LoadTracksForPlaylist(null);
+                }
+            }
+            else
+            {
+                // Ищем треки по названию
+                tracks = dbHelper.SearchTracksByTitle(searchQuery);
+                TracksListView.ItemsSource = tracks;
+            }
+        }
+
+        // Обработчик нажатия кнопки поиска
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            string searchQuery = SearchTextBox.Text.Trim();
+            SearchTracks(searchQuery);
+        }
+
+        // Опционально: поиск в реальном времени при вводе текста
+        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string searchQuery = SearchTextBox.Text.Trim();
+            SearchTracks(searchQuery);
+        }
+
         private void TracksListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (TracksListView.SelectedItem is WfpMediaPlayer.Models.Track selectedTrack)

@@ -16,6 +16,12 @@
 
         <Border Grid.Row="1" Margin="20" Background="#EFEFEF" Padding="10" CornerRadius="5">
             <StackPanel>
+                <!-- Добавляем поле поиска -->
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                    <TextBox x:Name="SearchTextBox" Width="300" Margin="5" TextChanged="SearchTextBox_TextChanged" ToolTip="Введите название трека для поиска"/>
+                    <Button Content="Поиск" Click="SearchButton_Click" Margin="5" Width="100"/>
+                </StackPanel>
+
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                     <ComboBox x:Name="PlaylistsComboBox" Width="200" Margin="5" SelectionChanged="PlaylistsComboBox_SelectionChanged"/>
                     <Button Content="Создать плейлист" Click="CreatePlaylistButton_Click" Margin="5" Width="150"/>
