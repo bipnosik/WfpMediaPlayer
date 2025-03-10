@@ -1,0 +1,68 @@
+﻿<Window x:Class="WfpMediaPlayer.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Capybara Music Player" Height="800" Width="1000"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Margin="20" CornerRadius="10" BorderThickness="2" BorderBrush="#007ACC">
+            <MediaElement x:Name="MediaPlayer" LoadedBehavior="Manual" UnloadedBehavior="Stop" Stretch="Uniform" MediaOpened="MediaPlayer_MediaOpened"/>
+        </Border>
+
+        <Border Grid.Row="1" Margin="20" Background="#EFEFEF" Padding="10" CornerRadius="5">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                    <ComboBox x:Name="PlaylistsComboBox" Width="200" Margin="5" SelectionChanged="PlaylistsComboBox_SelectionChanged"/>
+                    <Button Content="Создать плейлист" Click="CreatePlaylistButton_Click" Margin="5" Width="150"/>
+                </StackPanel>
+
+                <ListView x:Name="TracksListView" Height="150" SelectionChanged="TracksListView_SelectionChanged" Margin="0,0,0,10">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Title}" Width="250"/>
+                            <GridViewColumn Header="Жанр" DisplayMemberBinding="{Binding Genre}" Width="100"/>
+                            <GridViewColumn Header="Артист" DisplayMemberBinding="{Binding ArtistName}" Width="150"/>
+                            <GridViewColumn Header="Альбом" DisplayMemberBinding="{Binding AlbumTitle}" Width="150"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+                    <Button Content="⏪ Назад" Click="RewindButton_Click" Margin="5" Width="100"/>
+                    <Button Content="▶ Воспроизвести" Click="PlayButton_Click" Margin="5" Width="120"/>
+                    <Button Content="⏸ Пауза" Click="PauseButton_Click" Margin="5" Width="120"/>
+                    <Button Content="⏹ Остановить" Click="StopButton_Click" Margin="5" Width="120"/>
+                    <Button Content="⏩ Вперед" Click="ForwardButton_Click" Margin="5" Width="100"/>
+                    <Button Content="🗑 Удалить" Click="DeleteTrackButton_Click" Margin="5" Width="120" Background="#DC3545" Foreground="White"/>
+                    <Button Content="Добавить в плейлист" Click="AddToPlaylistButton_Click" Margin="5" Width="150"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                    <ComboBox x:Name="ArtistsComboBox" Width="200" Margin="5" DisplayMemberPath="Name"/>
+                    <Button Content="Назначить артиста" Click="AssignArtistButton_Click" Margin="5" Width="150"/>
+                    <ComboBox x:Name="AlbumsComboBox" Width="200" Margin="5" DisplayMemberPath="Title"/>
+                    <Button Content="Назначить альбом" Click="AssignAlbumButton_Click" Margin="5" Width="150"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="20">
+            <StackPanel Orientation="Vertical" Margin="5">
+                <Button Content="Добавить песню" Width="200" Height="40" Click="AddSongButton_Click" Background="#28A745" Foreground="White" Margin="5"/>
+                <Button Content="Добавить артиста" Width="200" Height="40" Click="AddArtistButton_Click" Background="#007ACC" Foreground="White" Margin="5"/>
+                <Button Content="Добавить альбом" Width="200" Height="40" Click="AddAlbumButton_Click" Background="#FFC107" Foreground="Black" Margin="5"/>
+            </StackPanel>
+            <Slider x:Name="ProgressSlider" Width="400" Margin="20,0" Minimum="0" Thumb.DragStarted="ProgressSlider_DragStarted" Thumb.DragCompleted="ProgressSlider_DragCompleted"/>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock x:Name="CurrentTimeDisplay" FontWeight="Bold" Margin="10,0" Text="00:00"/>
+                <TextBlock Text="/" Margin="5,0"/>
+                <TextBlock x:Name="TotalTimeDisplay" FontWeight="Bold" Margin="10,0" Text="00:00"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>
